@@ -7,13 +7,14 @@ export class SerenatasController {
   constructor(private serenatasService: SerenatasService) {}
 
   @Get()
-  getSerenatas() {
-    return this.serenatasService.findAllSerenatas();
+ async getSerenatas() {
+    return await this.serenatasService.findAllSerenatas();
   }
 
   @Post()
-  create(@Body() payload: CreateSerenataDto) {
-    return this.serenatasService.create(payload);
+  async create(@Body() payload: CreateSerenataDto) {
+    const result = await this.serenatasService.create(payload)
+    return result
   }
 
   @Delete(':id')

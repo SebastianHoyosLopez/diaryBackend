@@ -1,11 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Serenata } from '../entities/serenata.entity';
+import { SerenataEntity } from '../entities/serenata.entity';
 import { CreateSerenataDto } from '../dtos/serenata.dtos';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 
 @Injectable()
 export class SerenatasService {
+  constructor(
+    @InjectRepository(SerenataEntity)
+    private readonly serenataRepo: Repository<SerenataEntity>
+  ) {}
+
   private conuterId = 1;
-  private serenatas: Serenata[] = [
+  private serenatas: SerenataEntity[] = [
     {
       id: 1,
       date: '2023/04/20',
@@ -16,17 +23,22 @@ export class SerenatasService {
     },
   ];
 
-  findAllSerenatas() {
-    return this.serenatas;
+  async findAllSerenatas(): Promise<SerenataEntity[]>{
+    return await this.serenataRepo.find();
   }
 
-  create(data: CreateSerenataDto) {
+  async create(data: CreateSerenataDto): Promise<SerenataEntity> {
     this.conuterId = this.conuterId + 1;
-    const newSerenata = {
+    // const newSerenata = {
+    //   id: this.conuterId,
+    //   ...data,
+    // }
+    const newSerenata = this.serenataRepo.create({
       id: this.conuterId,
-      ...data,
-    }
-    this.serenatas.push(newSerenata);
+      ...data
+    })
+    // this.serenatas.push(newSerenata);
+    await this.serenataRepo.save(newSerenata)
     return newSerenata
   }
 
