@@ -9,18 +9,9 @@ services:
       POSTGRES_DB: diarydb
       POSTGRES_USER: diaryMariachi
       POSTGRES_PASSWORD: diaryMariachi2023
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
     ports: 
       - 5432:5432
-
-  # pgadmin: 
-  #   image: dpage/pgadmin4
-  #   environment: 
-  #     - PGADMIN_DEFAULT_EMAIL=root@admin.con
-  #     - PGADMIN_DEFAULT_PASSWORD=root
-  #   ports:
-  #     - 5050:80
-
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
 volumes: 
   postgres:

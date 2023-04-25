@@ -1,12 +1,12 @@
-import { Entity, Column, PrimaryColumn } from "typeorm"
+import { Entity, Column, PrimaryColumn, DeleteDateColumn } from "typeorm"
 
 @Entity()
 export class SerenataEntity {
     @Column({unique: true})
-    id: number
+    @PrimaryColumn()
+    id: string
 
     @Column()
-    @PrimaryColumn()
     date: string
 
     @Column()
@@ -16,8 +16,11 @@ export class SerenataEntity {
     municipality: string
  
     @Column()
-    name: string
+    name: string 
  
     @Column()
     place: string
+
+    @DeleteDateColumn()
+    deletedAt?: Date
 }
