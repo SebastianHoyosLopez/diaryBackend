@@ -21,14 +21,14 @@ export class SerenatasController {
     return await this.serenatasService.findAllSerenatas();
   }
 
-  @Get(":id")
-  async getOneSerenata(@Param('id') id: string) {
-    return await this.serenatasService.findOneSerenata(id)
-  }
-
   @Get("History") 
   async getRecordSerenatas() {
     return await this.serenatasService.findRecord();
+  }
+
+  @Get(":id")
+  async getOneSerenata(@Param('id') id: string) {
+    return await this.serenatasService.findOneSerenata(id)
   }
 
   @Post()
