@@ -1,4 +1,5 @@
-import { IsDateString, IsNotEmpty, IsString } from "class-validator";
+import { PartialType } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateSerenataDto {
     @IsString()
@@ -17,3 +18,5 @@ export class CreateSerenataDto {
     @IsNotEmpty()
     readonly place: string
 }
+
+export class UpdateSerenataDto extends PartialType(CreateSerenataDto) {}

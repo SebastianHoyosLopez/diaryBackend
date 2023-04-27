@@ -3,13 +3,14 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
-import { SerenatasService } from '../services/serenatas.service';
-import { CreateSerenataDto } from '../dtos/serenata.dtos';
+
 import { IResponse } from 'src/utils/interFaces';
+import { SerenatasService } from '../services/serenatas.service';
+import { CreateSerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
 
 @Controller('serenatas')
 export class SerenatasController {
@@ -20,10 +21,25 @@ export class SerenatasController {
     return await this.serenatasService.findAllSerenatas();
   }
 
+  @Get(":id")
+  async getOneSerenata(@Param('id') id: string) {
+    return await this.serenatasService.findOneSerenata(id)
+  }
+
+  @Get("History") 
+  async getRecordSerenatas() {
+    return await this.serenatasService.findRecord();
+  }
+
   @Post()
   async create(@Body() createSerenataDto: CreateSerenataDto) {
     const result = await this.serenatasService.create(createSerenataDto);
     return result;
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() payload: UpdateSerenataDto) {
+    return this.serenatasService.update(id, payload)
   }
 
   @Delete(':id')

@@ -4,14 +4,21 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { SerenataEntity } from '../entities/serenata.entity';
-import { CreateSerenataDto } from '../dtos/serenata.dtos';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindManyOptions, FindOneOptions, MoreThanOrEqual, LessThanOrEqual, MoreThan, LessThan } from 'typeorm';
-import { plainToClass } from 'class-transformer';
+import {
+  Repository,
+  FindOneOptions,
+  MoreThanOrEqual,
+  LessThanOrEqual,
+  MoreThan,
+  LessThan,
+} from 'typeorm';
 import { validate } from 'class-validator';
-
+import { plainToClass } from 'class-transformer';
 import { v4 as uuidv4 } from 'uuid';
+
+import { SerenataEntity } from '../entities/serenata.entity';
+import { CreateSerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
 
 @Injectable()
 export class SerenatasService {
@@ -23,16 +30,31 @@ export class SerenatasService {
   async findAllSerenatas(): Promise<SerenataEntity[]> {
     const currentDate = new Date();
     const yesterday = new Date(currentDate);
-    yesterday.setDate(currentDate.getDate() - 1);
+    yesterday.setDate(currentDate.getDate() - 2);
 
     return await this.serenataRepo.find({
       where: {
         date: MoreThanOrEqual(yesterday.toISOString()),
-        // hour: MoreThanOrEqual(currentDate.getHours().toString()),
       },
       order: {
         date: 'ASC',
         hour: 'ASC',
+      },
+    });
+  }
+
+  async findRecord() {
+    const currentDate = new Date();
+    const yesterday = new Date(currentDate);
+    yesterday.setDate(currentDate.getDate() - 2);
+
+    return await this.serenataRepo.find({
+      where: {
+        date: LessThanOrEqual(yesterday.toISOString()),
+      },
+      order: {
+        date: 'DESC',
+        hour: 'DESC',
       },
     });
   }
@@ -46,12 +68,9 @@ export class SerenatasService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    // const conuterIdNew = this.conuterId + 1;
     const serenataExist = await this.findOne({
       where: { date: data.date, hour: data.hour },
     });
-
     if (serenataExist) {
       throw new HttpException('SERENATA_EXISTS', HttpStatus.CONFLICT);
     }
@@ -64,12 +83,30 @@ export class SerenatasService {
     return newSerenata;
   }
 
+  async update(id: string, changes: UpdateSerenataDto) {
+    const serenata = await this.serenataRepo.findOne({ where: { id: id } });
+    this.serenataRepo.merge(serenata, changes);
+    return this.serenataRepo.save(serenata);
+  }
+
   async findOne(
     filter: FindOneOptions<SerenataEntity>,
   ): Promise<SerenataEntity> {
     return await this.serenataRepo.findOne(filter);
   }
- 
+
+  async findOneSerenata(id: any) {
+    const serenata = await this.serenataRepo.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (!serenata) {
+      throw new NotFoundException(`Serenata #${id} not found`);
+    }
+    return serenata;
+  }
+
   async findOneOrFail(
     filter?: FindOneOptions<SerenataEntity>,
   ): Promise<SerenataEntity> {
@@ -85,6 +122,5 @@ export class SerenatasService {
       where: { id: id },
     });
     return await this.serenataRepo.softDelete({ id: serenataExist.id });
-
   }
 }
