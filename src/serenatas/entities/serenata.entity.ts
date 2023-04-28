@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, DeleteDateColumn } from "typeorm"
+import { Entity, Column, PrimaryColumn, DeleteDateColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
 
 @Entity()
 export class SerenataEntity {
@@ -23,4 +23,16 @@ export class SerenataEntity {
 
     @DeleteDateColumn()
     deletedAt?: Date
+
+    @CreateDateColumn({
+        type: 'timestamptz',
+        default: () => 'CURRENT_TIMESTAMP'
+    })
+    createAt: Date;
+
+    @UpdateDateColumn({
+        type: 'timestamptz',
+        default: () => 'CURRENT_TIMESTAMP'
+    })
+    updateAt: Date;
 }

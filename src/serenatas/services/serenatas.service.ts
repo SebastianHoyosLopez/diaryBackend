@@ -30,7 +30,7 @@ export class SerenatasService {
   async findAllSerenatas(): Promise<SerenataEntity[]> {
     const currentDate = new Date();
     const yesterday = new Date(currentDate);
-    yesterday.setDate(currentDate.getDate() - 2);
+    yesterday.setDate(currentDate.getDate() - 1);
 
     return await this.serenataRepo.find({
       where: {
@@ -95,15 +95,24 @@ export class SerenatasService {
     return await this.serenataRepo.findOne(filter);
   }
 
-  async findOneSerenata(id: any) {
-    const serenata = await this.serenataRepo.findOne({
+  // async findOneSerenata(id: string) {
+  //   const serenata = await this.serenataRepo.findOne({
+  //     where: {
+  //       id: id,
+  //     },
+  //   });
+  //   if (!serenata) {
+  //     throw new NotFoundException(`Serenata #${id} not found`);
+  //   }
+  //   return serenata;
+  // }
+
+  async findOneSerenata(id: string) {
+    const serenata = await this.findOneOrFail({
       where: {
         id: id,
       },
     });
-    if (!serenata) {
-      throw new NotFoundException(`Serenata #${id} not found`);
-    }
     return serenata;
   }
 
