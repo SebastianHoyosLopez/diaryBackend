@@ -2,16 +2,13 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   Repository,
   FindOneOptions,
-  MoreThanOrEqual,
   LessThanOrEqual,
   MoreThan,
-  LessThan,
 } from 'typeorm';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
@@ -34,7 +31,7 @@ export class SerenatasService {
 
     return await this.serenataRepo.find({
       where: {
-        date: MoreThanOrEqual(yesterday.toISOString()),
+        date: MoreThan(yesterday.toISOString()),
       },
       order: {
         date: 'ASC',
@@ -46,7 +43,7 @@ export class SerenatasService {
   async findRecord() {
     const currentDate = new Date();
     const yesterday = new Date(currentDate);
-    yesterday.setDate(currentDate.getDate() - 2);
+    yesterday.setDate(currentDate.getDate() - 0.5);
 
     return await this.serenataRepo.find({
       where: {

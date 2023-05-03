@@ -8,6 +8,7 @@ import { SerenatasController } from './controller/serenatas.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([SerenataEntity])],
   controllers: [SerenatasController],
-  providers: [SerenatasService]
+  providers: [SerenatasService],
+  exports: [SerenatasService]
 })
 export class SerenatasModule {}
