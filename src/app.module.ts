@@ -7,7 +7,6 @@ import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
 import { AppController } from './app.controller';
 
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -20,16 +19,15 @@ import { AppController } from './app.controller';
       // entities: [__dirname + '/**/*.entity{.ts,.js}'],
       entities: [__dirname + process.env.TYPEORM_ENTITIES],
       synchronize: true,
+      migrations: [],
       autoLoadEntities: true,
     }),
-    
+
     SerenatasModule,
     UsersModule,
     DatabaseModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
