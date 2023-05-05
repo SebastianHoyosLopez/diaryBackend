@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryColumn,
   UpdateDateColumn,
@@ -20,7 +21,13 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 100 })
   role: string;
 
-  @CreateDateColumn({
+  @Column()
+  userName: string;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
+
+  @CreateDateColumn({ 
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
