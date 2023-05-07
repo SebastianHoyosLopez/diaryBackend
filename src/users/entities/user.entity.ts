@@ -5,7 +5,11 @@ import {
   Entity,
   PrimaryColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
+
+import { CustomerEntity } from './customer.entity';
 
 @Entity()
 export class UserEntity {
@@ -27,7 +31,7 @@ export class UserEntity {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @CreateDateColumn({ 
+  @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
@@ -38,4 +42,10 @@ export class UserEntity {
     default: () => 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
+
+  @OneToOne(() => CustomerEntity, (customer) => customer.user, {
+    nullable: true,
+  })
+  @JoinColumn()
+  customer: CustomerEntity;
 }

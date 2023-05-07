@@ -4,14 +4,20 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  OneToMany,
 } from 'typeorm';
+import { UserEntity } from './user.entity';
+import { SerenataEntity } from 'src/serenatas/entities/serenata.entity';
+
+
 
 @Entity()
 export class CustomerEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
 
   @Column({ type: 'varchar', length: 100 })
@@ -28,7 +34,13 @@ export class CustomerEntity {
 
   @UpdateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
-})
-updateAt: Date;
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  updateAt: Date;
+
+  @OneToOne(() => UserEntity, (user) => user.customer, { nullable: true })
+  user: UserEntity;
+
+  // @OneToMany(() => SerenataEntity, (serenata) => serenata.customerId)
+  // serenatas: SerenataEntity[]
 }

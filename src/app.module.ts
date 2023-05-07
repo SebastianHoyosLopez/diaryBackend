@@ -19,8 +19,8 @@ import { AppController } from './app.controller';
       // entities: [__dirname + '/**/*.entity{.ts,.js}'],
       entities: [__dirname + process.env.TYPEORM_ENTITIES],
       synchronize: true,
-      migrations: [],
       autoLoadEntities: true,
+      migrations: ["dist/migrations/*.js, .ts"],
     }),
 
     SerenatasModule,

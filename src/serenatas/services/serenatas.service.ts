@@ -16,18 +16,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { SerenataEntity } from '../entities/serenata.entity';
 import { CreateSerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
+import { CustomersService } from 'src/users/services/customer.service';
 
 @Injectable()
 export class SerenatasService {
   constructor(
     @InjectRepository(SerenataEntity)
     private readonly serenataRepo: Repository<SerenataEntity>,
+    private readonly customersService: CustomersService
   ) {}
 
   async findAllSerenatas(): Promise<SerenataEntity[]> {
     const currentDate = new Date();
     const yesterday = new Date(currentDate);
-    yesterday.setDate(currentDate.getDate() - 1);
+    yesterday.setDate(currentDate.getDate() - 1.3);
 
     return await this.serenataRepo.find({
       where: {
@@ -43,7 +45,7 @@ export class SerenatasService {
   async findRecord() {
     const currentDate = new Date();
     const yesterday = new Date(currentDate);
-    yesterday.setDate(currentDate.getDate() - 0.5);
+    yesterday.setDate(currentDate.getDate() - 1.2);
 
     return await this.serenataRepo.find({
       where: {
@@ -71,7 +73,6 @@ export class SerenatasService {
     if (serenataExist) {
       throw new HttpException('SERENATA_EXISTS', HttpStatus.CONFLICT);
     }
-
     const newSerenata = this.serenataRepo.create({
       id: uuidv4(),
       ...data,

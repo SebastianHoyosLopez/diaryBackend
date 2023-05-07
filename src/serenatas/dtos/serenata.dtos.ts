@@ -1,5 +1,7 @@
 import { PartialType } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
+import { CustomerEntity } from "src/users/entities/customer.entity";
+import { DeepPartial } from "typeorm";
 
 export class CreateSerenataDto {
     @IsString()
@@ -17,6 +19,11 @@ export class CreateSerenataDto {
     @IsString()
     @IsNotEmpty()
     readonly place: string
+
+    @IsOptional()
+    @IsPositive()
+    @IsNotEmpty()
+    readonly customerId: number;
 }
 
 export class UpdateSerenataDto extends PartialType(CreateSerenataDto) {}

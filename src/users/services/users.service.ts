@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { UserEntity } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/CreateUserDto.dtos';
-
 import { SerenatasService } from '../../serenatas/services/serenatas.service';
+import { CustomersService } from './customer.service';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +14,7 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private readonly usersRepo: Repository<UserEntity>,
     private readonly serenatasService: SerenatasService,
+    private readonly customersService: CustomersService,
   ) {}
 
   async getOne(filter: FindOneOptions<UserEntity>): Promise<UserEntity> {
@@ -34,6 +35,11 @@ export class UsersService {
 
   async create(data: CreateUserDto) {
     const newUser = this.usersRepo.create({ ...data, id: uuidv4() });
+    if(data.customerId) {
+      const customer = await this.customersService.findOne(data.customerId)
+      newUser.customer = customer;
+    }
+
     return this.usersRepo.save(newUser);
   }
 

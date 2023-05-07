@@ -10,7 +10,7 @@ export class UsersController {
   @Get()
   async getUsers() {
     const result = await this.usersService.getMany({
-        // where: { active: true, status: Not(UserStatus.Pendiente) }
+        relations: ['customer']
     });
     return result
   }

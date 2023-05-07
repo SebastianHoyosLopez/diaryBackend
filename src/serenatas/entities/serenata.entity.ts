@@ -1,38 +1,51 @@
-import { Entity, Column, PrimaryColumn, DeleteDateColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  DeleteDateColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+
+import { CustomerEntity } from '../../users/entities/customer.entity';
 
 @Entity()
 export class SerenataEntity {
-    @Column({unique: true})
-    @PrimaryColumn()
-    id: string
+  @Column({ unique: true })
+  @PrimaryColumn()
+  id: string;
 
-    @Column()
-    date: string
+  @Column()
+  date: string;
 
-    @Column()
-    hour: string
+  @Column()
+  hour: string;
 
-    @Column()
-    municipality: string
- 
-    @Column()
-    name: string 
- 
-    @Column()
-    place: string
+  @Column()
+  municipality: string;
 
-    @DeleteDateColumn()
-    deletedAt?: Date
+  @Column()
+  name: string;
 
-    @CreateDateColumn({
-        type: 'timestamptz',
-        default: () => 'CURRENT_TIMESTAMP'
-    })
-    createAt: Date;
+  @Column()
+  place: string;
 
-    @UpdateDateColumn({
-        type: 'timestamptz',
-        default: () => 'CURRENT_TIMESTAMP'
-    })
-    updateAt: Date;
+  @DeleteDateColumn()
+  deletedAt?: Date;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createAt: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  updateAt: Date;
+
+//   @ManyToOne(() => CustomerEntity, (customer) => customer.serenatas)
+//   customerId: CustomerEntity;
 }
