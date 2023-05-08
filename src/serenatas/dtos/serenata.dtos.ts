@@ -20,7 +20,6 @@ export class CreateSerenataDto {
     @IsNotEmpty()
     readonly place: string
 
-    @IsOptional()
     @IsPositive()
     @IsNotEmpty()
     readonly customerId: number;

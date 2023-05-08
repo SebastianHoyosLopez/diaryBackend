@@ -41,6 +41,6 @@ export class CustomerEntity {
   @OneToOne(() => UserEntity, (user) => user.customer, { nullable: true })
   user: UserEntity;
 
-  // @OneToMany(() => SerenataEntity, (serenata) => serenata.customerId)
-  // serenatas: SerenataEntity[]
+  @OneToMany(() => SerenataEntity, (serenata) => serenata.customer)
+  serenatas: SerenataEntity[]
 }

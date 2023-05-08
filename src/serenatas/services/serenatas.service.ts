@@ -26,20 +26,36 @@ export class SerenatasService {
     private readonly customersService: CustomersService
   ) {}
 
+  // async findAllSerenatas(): Promise<SerenataEntity[]> {
+  //   const currentDate = new Date();
+  //   const yesterday = new Date(currentDate);
+  //   yesterday.setDate(currentDate.getDate() - 1.3);
+
+  //   return await this.serenataRepo.find({
+  //     where: {
+  //       date: MoreThan(yesterday.toISOString())
+  //     },
+  //     order: {
+  //       date: 'ASC',
+  //       hour: 'ASC',
+  //     },
+  //   });
+  // }
+
   async findAllSerenatas(): Promise<SerenataEntity[]> {
     const currentDate = new Date();
     const yesterday = new Date(currentDate);
-    yesterday.setDate(currentDate.getDate() - 1.3);
+    yesterday.setDate(currentDate.getDate() - 1);
 
-    return await this.serenataRepo.find({
-      where: {
-        date: MoreThan(yesterday.toISOString()),
-      },
-      order: {
-        date: 'ASC',
-        hour: 'ASC',
-      },
-    });
+    return await this.serenataRepo
+      .createQueryBuilder('serenata')
+      .leftJoinAndSelect('serenata.customer', 'customer')
+      .where({
+        date: MoreThan(yesterday.toISOString())
+      })
+      .orderBy('date', 'ASC')
+      .addOrderBy('hour', 'ASC')
+      .getMany();
   }
 
   async findRecord() {
@@ -73,16 +89,29 @@ export class SerenatasService {
     if (serenataExist) {
       throw new HttpException('SERENATA_EXISTS', HttpStatus.CONFLICT);
     }
+    
     const newSerenata = this.serenataRepo.create({
       id: uuidv4(),
       ...data,
     });
+
+    if(data.customerId) {
+      const customer = await this.customersService.findOne(data.customerId)
+      newSerenata.customer = customer
+    }
+
     await this.serenataRepo.save(newSerenata);
     return newSerenata;
   }
 
   async update(id: string, changes: UpdateSerenataDto) {
     const serenata = await this.serenataRepo.findOne({ where: { id: id } });
+    
+    if(changes.customerId) {
+      const customer = await this.customersService.findOne(changes.customerId)
+      serenata.customer = customer
+    }
+    
     this.serenataRepo.merge(serenata, changes);
     return this.serenataRepo.save(serenata);
   }

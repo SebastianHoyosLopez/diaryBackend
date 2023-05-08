@@ -15,8 +15,21 @@ export class CustomersService {
     return this.customerRepo.find();
   }
 
+  // async findOne(id: number) {
+  //   const customer = await this.customerRepo.findOne({ where: {id}});
+  //   if (!customer) {
+  //     throw new NotFoundException(`Customer #${id} not found`);
+  //   }
+  //   return customer;
+  // }
+
   async findOne(id: number) {
-    const customer = await this.customerRepo.findOne({ where: {id}});
+    const customer = await this.customerRepo
+      .createQueryBuilder('customer')
+      .leftJoinAndSelect('customer.serenatas', 'serenata')
+      .where('customer.id = :id', { id })
+      .getOne();
+
     if (!customer) {
       throw new NotFoundException(`Customer #${id} not found`);
     }

@@ -46,6 +46,6 @@ export class SerenataEntity {
   })
   updateAt: Date;
 
-//   @ManyToOne(() => CustomerEntity, (customer) => customer.serenatas)
-//   customerId: CustomerEntity;
+  @ManyToOne(() => CustomerEntity, (customer) => customer.serenatas)
+  customer: CustomerEntity;
 }
